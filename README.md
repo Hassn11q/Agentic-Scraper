@@ -19,8 +19,8 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/amazon-product-scraper.git
-   cd agentic-webscraper
+   https://github.com/Hassn11q/Agentic-Scraper.git
+   cd Agentic-Scraper
    ```
 
 2. Install the required Python packages:
