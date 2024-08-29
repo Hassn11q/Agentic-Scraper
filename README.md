@@ -66,4 +66,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - [AgentQL](https://dev.agentql.com/) for providing the querying capabilities
-- [Playwright](https://playwright.dev/) for browser automation# Agentic-Scraper
+- [Playwright](https://playwright.dev/) for browser automation Agentic-Scraper
