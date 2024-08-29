@@ -1,10 +1,10 @@
 # Agentic Scraper
 
-web scraper designed to extract product information from commercial websites using AgentQL and Playwright and store the results in a CSV file.
+web scraper designed to extract product information from e-commerce Websites using AgentQL and Playwright and store the results in a CSV file.
 
 ## Features
 
-- Scrapes product name, price, number of reviews, and rating from commercial websites
+- Scrapes product name, price, number of reviews, and rating from ce-commerce Websites
 - Handles pagination to scrape multiple pages of results
 - Stores scraped data in a CSV file
 
