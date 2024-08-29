@@ -59,10 +59,6 @@ You can modify the following variables in `agent.py` to customize the scraper's 
 - `PAGINATION_QUERY`: The GraphQL query for pagination data
 
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Acknowledgments
 
 - [AgentQL](https://dev.agentql.com/) for providing the querying capabilities
