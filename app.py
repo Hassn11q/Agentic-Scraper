@@ -10,6 +10,7 @@ from agentql.sync_api import ScrollDirection
 import time
 from io import StringIO
 from pydantic import BaseModel
+import re
 
 # Load environment variables
 load_dotenv()
@@ -56,6 +57,9 @@ if use_pagination:
 
 st.sidebar.markdown("---")
 
+def sanitize_field_name(field):
+    return re.sub(r'[^a-zA-Z0-9_]', '', field).lower()
+
 def start_scraping_session(url):
     """Initialize and return an AgentQL session"""
     session = agentql.start_session(url)
@@ -70,8 +74,10 @@ def scrape_items(session, fields, num_pages):
     items_query = "{"  
     items_query += "results { products[] {" 
     for field in fields:
-        items_query += f"{field} " 
+        sanitized_field = sanitize_field_name(field)
+        items_query += f"{sanitized_field} " 
     items_query += "} } }" 
+
 
     pagination_query = """
     {
@@ -83,24 +89,36 @@ def scrape_items(session, fields, num_pages):
     for page in range(1, num_pages + 1):
         st.write(f"Scraping page {page}")
         
-        # Fetch items data
-        elements = session.query(items_query) 
-        items_data = elements.to_data()['results']['products'] 
-        all_products.extend(items_data)  # Extend the list with new products
-        st.write(f"Scraped {len(items_data)} products successfully")
-        
-        # Check pagination status
-        pagination = session.query(pagination_query)
-        pagination_data = pagination.to_data()
-        if not pagination_data['next_page_button_enabled'] or pagination_data['next_page_button_disabled']:
-            st.write("Reached the last page. Scraping complete.")
+        try:
+            # Fetch items data
+            elements = session.query(items_query) 
+            items_data = elements.to_data()['results']['products'] 
+            all_products.extend(items_data)  # Extend the list with new products
+            st.write(f"Scraped {len(items_data)} products successfully")
+        except agentql.QuerySyntaxError as e:
+            st.error(f"Query syntax error: {str(e)}")
+            st.code(items_query, language="graphql")
+            break
+        except Exception as e:
+            st.error(f"An unexpected error occurred while fetching items: {str(e)}")
             break
         
-        # Navigate to the next page
-        pagination.next_page_button_enabled.click()
-        st.write("Navigated to the next page")
-        session.driver.scroll_to_bottom()
-        time.sleep(2)  # Wait for the page to load
+        try:
+            # Check pagination status
+            pagination = session.query(pagination_query)
+            pagination_data = pagination.to_data()
+            if not pagination_data['next_page_button_enabled'] or pagination_data['next_page_button_disabled']:
+                st.write("Reached the last page. Scraping complete.")
+                break
+            
+            # Navigate to the next page
+            pagination.next_page_button_enabled.click()
+            st.write("Navigated to the next page")
+            session.driver.scroll_to_bottom()
+            time.sleep(2)  # Wait for the page to load
+        except Exception as e:
+            st.error(f"An error occurred while navigating to the next page: {str(e)}")
+            break
     
     return all_products
 
@@ -169,23 +187,7 @@ if st.session_state['results']:
 
 # Footer
 st.markdown("---")
-st.markdown("Built with ❤️ using Streamlit and AgentQL")
+st.markdown("Built with ❤️ By Hassn using Streamlit and AgentQL")
 
 if __name__ == "__main__":
-    pass  # The Streamlit app is already running at this point
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    pass  

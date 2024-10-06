@@ -1,3 +1,6 @@
-agentql==1.0.1
-playwright==1.45.0
+agentql==1.2.0
+pandas==2.2.3
+pydantic==2.9.2
 python-dotenv==1.0.1
+streamlit==1.36.0
+streamlit_tags==1.2.8
